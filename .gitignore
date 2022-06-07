@@ -146,3 +146,4 @@ node_modules
 package-lock.json
 backend/env.dev
 final.csv
+.idea
