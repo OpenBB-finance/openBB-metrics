@@ -1,4 +1,4 @@
-To run: 
+To run without Docker: 
 
 `pip install poetry`
 
@@ -6,15 +6,22 @@ To run:
 
 `uvicorn main:app --reload`
 
-Docker: 
+To run using Docker: 
 
-`docker-compose up -d --build`
+`docker-compose build`
 
-Issues:
+`docker-compose run web alembic revision --autogenerate`
 
-- Unable to connect to local postgres db if using docker
+`docker-compose run web alembic upgrade head`
+
+`docker-compose up`
+
 
 To do:
 
 - Discord
 - Linkedin
+
+For reference:
+
+- https://ahmed-nafies.medium.com/fastapi-with-sqlalchemy-postgresql-and-alembic-and-of-course-docker-f2b7411ee396

@@ -48,6 +48,32 @@ class RedditReturn(BaseModel, **main_config):
     updated_date: str
 
 
+class LinkedinCreate(BaseModel, **main_config):
+    total_followers: Optional[int]
+    new_followers: Optional[int]
+    updated_date: str
+
+
+class LinkedinReturn(BaseModel, **main_config):
+    total_followers: Optional[int]
+    new_followers: Optional[int]
+    updated_date: str
+
+
+class DiscordCreate(BaseModel, **main_config):
+    total_followers: Optional[int]
+    new_followers: Optional[int]
+    active_followers: Optional[int]
+    updated_date: str
+
+
+class DiscordReturn(BaseModel, **main_config):
+    total_followers: Optional[int]
+    new_followers: Optional[int]
+    active_followers: Optional[int]
+    updated_date: str
+
+
 class MessageReturn(BaseModel, **main_config):
     message: str
     success: bool

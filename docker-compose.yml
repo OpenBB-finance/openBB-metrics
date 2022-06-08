@@ -1,31 +1,29 @@
-version: '3.1'
+version: "3"
 
 services:
   db:
     image: postgres
-    restart: always
-    env_file:
-      - .env
     ports:
-      - 5432:5432
-    networks:
-      - local-net
-
-  fastapi:
-    restart: always
+      - "5432:5432"
     env_file:
       - .env
+  web:
+    command: bash -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: fastapi
     ports:
-      - 8000:8000
+      - "8000:8000"
     depends_on:
       - db
-    networks:
-      - local-net
 
-networks:
-  local-net:
-    driver: bridge
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=pgadmin4@pgadmin.org
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - db

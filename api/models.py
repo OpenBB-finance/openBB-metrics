@@ -34,3 +34,22 @@ class Reddit(Base):
     new_followers = Column(Integer, nullable=True)
     upvotes = Column(Integer, nullable=True)
     updated_date = Column(String, nullable=False)
+
+
+class Linkedin(Base):
+    __tablename__ = "linkedin"
+
+    id = Column(Integer, primary_key=True, index=True)
+    total_followers = Column(Integer, nullable=True)
+    new_followers = Column(Integer, nullable=True)
+    updated_date = Column(String, nullable=False)
+
+
+class Discord(Base):
+    __tablename__ = "discord"
+
+    id = Column(Integer, primary_key=True, index=True)
+    total_followers = Column(Integer, nullable=True)
+    new_followers = Column(Integer, nullable=True)
+    active_followers = Column(Integer, nullable=True)
+    updated_date = Column(String, nullable=False)

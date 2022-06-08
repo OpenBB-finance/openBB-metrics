@@ -23,7 +23,7 @@ async def validation_exception_handler(request, exc):
 
 
 @app.get("/")
-def read_root():
+def home():
     return {"/terminal_downloads": "Terminal Download Statistics",
             "/twitter": "Twitter Statistics",
             "/reddit": "Reddit Statistics"}
@@ -60,3 +60,13 @@ def get_reddit(db: Session = Depends(get_db)):
 def create_reddit(reddit: schemas.RedditCreate, db: Session = Depends(get_db)):
     crud.create_reddit(db=db, reddit=reddit)
     return JSONResponse(content={"success": "true"}, status_code=200)
+
+
+@app.get("/linkedin")
+def get_linkedin(db: Session = Depends(get_db)):
+    return crud.get_linkedin(db)
+
+
+@app.get("/discord")
+def get_discord(db: Session = Depends(get_db)):
+    return crud.get_discord(db)

@@ -5,7 +5,8 @@ from utilities.config import settings
 
 user = settings.POSTGRES_USERNAME
 password = settings.POSTGRES_PASSWORD
-host = settings.POSTGRES_URL
+# host = settings.POSTGRES_URL
+host = "db"
 db_name = settings.POSTGRES_DB
 
 SQLALCHEMY_DATABASE_URL = f'postgresql+psycopg2://{user}:{password}@{host}:5432/{db_name}'

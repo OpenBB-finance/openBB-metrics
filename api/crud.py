@@ -2,10 +2,6 @@ from sqlalchemy.orm import Session
 from . import models, schemas
 
 
-def get_terminal_download(db: Session, updated_date: int):
-    return db.query(models.TerminalDownloads).filter(models.TerminalDownloads.updated_date == updated_date).first()
-
-
 def get_terminal_downloads(db: Session):
     return db.query(models.TerminalDownloads).all()
 
@@ -43,3 +39,29 @@ def create_reddit(db: Session, reddit: schemas.RedditCreate):
     db.commit()
     db.refresh(db_reddit)
     return db_reddit
+
+
+def get_linkedin(db: Session):
+    return db.query(models.Linkedin).all()
+
+
+def create_linkedin(db: Session, linkedin: schemas.LinkedinCreate):
+    db_linkedin = models.Linkedin(total_followers=linkedin.total_followers, new_followers=linkedin.new_followers,
+                                  updated_date=linkedin.updated_date)
+    db.add(db_linkedin)
+    db.commit()
+    db.refresh(db_linkedin)
+    return db_linkedin
+
+
+def get_discord(db: Session):
+    return db.query(models.Discord).all()
+
+
+def create_discord(db: Session, discord: schemas.LinkedinCreate):
+    db_discord = models.Discord(total_followers=discord.total_followers, new_followers=discord.new_followers,
+                                active_followers=discord.active_followers, updated_date=discord.updated_date)
+    db.add(db_discord)
+    db.commit()
+    db.refresh(db_discord)
+    return db_discord

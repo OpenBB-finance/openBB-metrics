@@ -7,8 +7,12 @@ from utilities.config import settings
 current_date = str(datetime.utcnow().date())
 
 
-def post_request(url, data):
-    return requests.post(url, data=json.dumps(data), headers={'Content-Type': 'application/json'})
+def send_request(url, data=None, type_req="POST"):
+    if data is None:
+        data = {}
+    return requests.request(type_req, f"http://127.0.0.1:8000/{url}",
+                            data=json.dumps(data),
+                            headers={'Content-Type': 'application/json'}).json()
 
 
 def get_terminal_downloads():
@@ -26,7 +30,7 @@ def get_terminal_downloads():
         elif installer["name"].endswith(".exe"):
             windows = installer["download_count"]
 
-    response = post_request("http://127.0.0.1:8000/terminal_downloads",
+    response = send_request("terminal_downloads",
                             {"tag_name": version, "macos": macos, "windows": windows, "updated_date": current_date})
     return response
 
@@ -41,7 +45,7 @@ def twitter_bearer_oauth(r):
 
 
 def connect_to_twitter_endpoint(url):
-    response = requests.request("GET", url, auth=twitter_bearer_oauth, )
+    response = requests.get(url, auth=twitter_bearer_oauth)
     if response.status_code != 200:
         raise Exception(
             "Request returned an errors: {} {}".format(
@@ -59,7 +63,7 @@ def get_twitter_stats():
     data = connect_to_twitter_endpoint(url)
     total_followers = data["followers_count"]
 
-    data = requests.get("http://127.0.0.1:8000/twitter").json()
+    data = send_request("twitter", type_req="GET")
     prev_followers = 0
     if data:
         if data[-1]["total_followers"] is not None:
@@ -67,33 +71,19 @@ def get_twitter_stats():
 
     new_followers = total_followers - prev_followers
 
-    # url = "https://api.twitter.com/2/users/by/username/openbb_finance"
-    # data = connect_to_twitter_endpoint(url)
-    # openbb_id = data["data"]["id"]
-
     url = "https://api.twitter.com/2/users/1388522440536494081/tweets?tweet.fields=attachments,author_id,created_at," \
           "public_metrics,source,referenced_tweets"
     data = connect_to_twitter_endpoint(url)
     likes, retweets = 0, 0
     for i in data["data"]:
-        # print(i)
-        # if "referenced_tweets" in i:
-        #     post_type = i["referenced_tweets"][0]["type"]
-        #     print("reference: ", post_type)
-        # else:
-        #     print("reference: ", "ORIGINAL")
         metrics = i["public_metrics"]
-        # print("retweet: ", metrics["retweet_count"])
-        # print("reply: ", metrics["reply_count"])
-        # print("like: ", metrics["like_count"])
-        # print("created: ", i["created_at"])
-        # print()
         if i["created_at"] > str(datetime.utcnow() - timedelta(days=1)):
             likes += metrics["like_count"]
             retweets += metrics["retweet_count"]
 
-    response = post_request("http://127.0.0.1:8000/twitter",
-                            {"total_followers": total_followers, "new_followers": new_followers, "likes": likes, "retweets": retweets, "updated_date": current_date})
+    response = send_request("twitter",
+                            {"total_followers": total_followers, "new_followers": new_followers, "likes": likes,
+                             "retweets": retweets, "updated_date": current_date})
     return response
 
 
@@ -106,8 +96,7 @@ def get_reddit_stats():
                          user_agent=settings.REDDIT_USER_AGENT)
     subreddit = reddit.subreddit("openBB")
     followers = subreddit.subscribers
-    response = post_request("http://127.0.0.1:8000/reddit",
-                            {"total_followers": followers, "updated_date": current_date})
+    response = send_request("reddit", {"total_followers": followers, "updated_date": current_date})
     return response
 
 
