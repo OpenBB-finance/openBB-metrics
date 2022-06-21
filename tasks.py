@@ -81,9 +81,15 @@ def get_twitter_stats():
             likes += metrics["like_count"]
             retweets += metrics["retweet_count"]
 
+    url = "https://api.twitter.com/2/tweets/counts/recent?query=openbb&granularity=hour"
+    data = connect_to_twitter_endpoint(url)
+    mentions = 0
+    for i in data["data"][-24:]:
+        mentions += i["tweet_count"]
+
     response = send_request("twitter",
                             {"total_followers": total_followers, "new_followers": new_followers, "likes": likes,
-                             "retweets": retweets, "updated_date": current_date})
+                             "retweets": retweets, "mentions": mentions, "updated_date": current_date})
     return response
 
 
@@ -100,7 +106,41 @@ def get_reddit_stats():
     return response
 
 
+def get_discord_stats():
+    return
+
+
+def get_headlines_stats():
+    """
+    Get news headlines statistics
+    """
+    url = f"https://newsapi.org/v2/everything?q=openbb&apiKey={settings.NEWSAPI_TOKEN}"
+    data = requests.get(url)
+    for i in data.json()["articles"]:
+        response = send_request("headlines", {"source": i["source"]["name"], "title": i["title"], "url": i["url"],
+                                              "published_date": i["publishedAt"]})
+        print(response)
+
+
+def get_youtube_stats():
+    """
+    Get YouTube statistics
+    """
+    url = f"https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=openbb&publishedAfter=2022-01-01T00%3A00" \
+          f"%3A00Z&order=date&key={settings.YOUTUBE_TOKEN}"
+    data = requests.get(url)
+    for i in data.json()["items"]:
+        response = send_request("youtube", {"channel": i["snippet"]["channelTitle"],
+                                            "title": i["snippet"]["title"],
+                                            "video_id": i["id"]["videoId"],
+                                            "published_date": i["snippet"]["publishTime"]})
+        print(response)
+
+
 if __name__ == '__main__':
     get_terminal_downloads()
     get_twitter_stats()
     get_reddit_stats()
+    get_discord_stats()
+    get_headlines_stats()
+    get_youtube_stats()

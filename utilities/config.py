@@ -23,6 +23,8 @@ class Settings(BaseSettings):
     REDDIT_CLIENT_ID: str
     REDDIT_CLIENT_SECRET: str
     REDDIT_USER_AGENT:  str
+    NEWSAPI_TOKEN: str
+    YOUTUBE_TOKEN: str
 
 
 file = ".env"

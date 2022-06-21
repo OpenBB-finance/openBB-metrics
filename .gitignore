@@ -147,3 +147,5 @@ package-lock.json
 backend/env.dev
 final.csv
 .idea
+
+zz.py

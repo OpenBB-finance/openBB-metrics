@@ -1,9 +1,13 @@
+from typing import Union
 from sqlalchemy.orm import Session
 from . import models, schemas
 
 
-def get_terminal_downloads(db: Session):
-    return db.query(models.TerminalDownloads).all()
+def get_terminal_downloads(db: Session, updated_date: Union[str, None] = None):
+    if updated_date:
+        return db.query(models.TerminalDownloads).filter(models.TerminalDownloads.updated_date == updated_date).first()
+    else:
+        return db.query(models.TerminalDownloads).all()
 
 
 def create_terminal_download(db: Session, terminal: schemas.TerminalCreate):
@@ -15,21 +19,28 @@ def create_terminal_download(db: Session, terminal: schemas.TerminalCreate):
     return db_download
 
 
-def get_twitter(db: Session):
-    return db.query(models.Twitter).all()
+def get_twitter(db: Session, updated_date: Union[str, None] = None):
+    if updated_date:
+        return db.query(models.Twitter).filter(models.Twitter.updated_date == updated_date).first()
+    else:
+        return db.query(models.Twitter).all()
 
 
 def create_twitter(db: Session, twitter: schemas.TwitterCreate):
     db_twitter = models.Twitter(total_followers=twitter.total_followers, new_followers=twitter.new_followers,
-                                likes=twitter.likes, retweets=twitter.retweets, updated_date=twitter.updated_date)
+                                likes=twitter.likes, retweets=twitter.retweets, mentions=twitter.mentions,
+                                updated_date=twitter.updated_date)
     db.add(db_twitter)
     db.commit()
     db.refresh(db_twitter)
     return db_twitter
 
 
-def get_reddit(db: Session):
-    return db.query(models.Reddit).all()
+def get_reddit(db: Session, updated_date: Union[str, None] = None):
+    if updated_date:
+        return db.query(models.Reddit).filter(models.Reddit.updated_date == updated_date).first()
+    else:
+        return db.query(models.Reddit).all()
 
 
 def create_reddit(db: Session, reddit: schemas.RedditCreate):
@@ -65,3 +76,35 @@ def create_discord(db: Session, discord: schemas.LinkedinCreate):
     db.commit()
     db.refresh(db_discord)
     return db_discord
+
+
+def get_headlines(db: Session, url: Union[str, None] = None):
+    if url:
+        return db.query(models.Headlines).filter(models.Headlines.url == url).first()
+    else:
+        return db.query(models.Headlines).all()
+
+
+def create_headlines(db: Session, headlines: schemas.HeadlinesCreate):
+    db_headlines = models.Headlines(source=headlines.source, title=headlines.title, url=headlines.url,
+                                    published_date=headlines.published_date)
+    db.add(db_headlines)
+    db.commit()
+    db.refresh(db_headlines)
+    return db_headlines
+
+
+def get_youtube(db: Session, video_id: Union[str, None] = None):
+    if video_id:
+        return db.query(models.Youtube).filter(models.Youtube.video_id == video_id).first()
+    else:
+        return db.query(models.Youtube).all()
+
+
+def create_youtube(db: Session, youtube: schemas.YoutubeCreate):
+    db_youtube = models.Youtube(channel=youtube.channel, title=youtube.title, video_id=youtube.video_id,
+                                published_date=youtube.published_date)
+    db.add(db_youtube)
+    db.commit()
+    db.refresh(db_youtube)
+    return db_youtube

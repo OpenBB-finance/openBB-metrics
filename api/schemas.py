@@ -23,6 +23,7 @@ class TwitterCreate(BaseModel, **main_config):
     new_followers: Optional[int]
     likes: Optional[int]
     retweets: Optional[int]
+    mentions: Optional[int]
     updated_date: str
 
 
@@ -31,6 +32,7 @@ class TwitterReturn(BaseModel, **main_config):
     new_followers: Optional[int]
     likes: Optional[int]
     retweets: Optional[int]
+    mentions: Optional[int]
     updated_date: str
 
 
@@ -72,6 +74,34 @@ class DiscordReturn(BaseModel, **main_config):
     new_followers: Optional[int]
     active_followers: Optional[int]
     updated_date: str
+
+
+class HeadlinesCreate(BaseModel, **main_config):
+    source: Optional[str]
+    title: Optional[str]
+    url: Optional[str]
+    published_date: str
+
+
+class HeadlinesReturn(BaseModel, **main_config):
+    source: Optional[str]
+    title: Optional[str]
+    url: Optional[str]
+    published_date: str
+
+
+class YoutubeCreate(BaseModel, **main_config):
+    channel: Optional[str]
+    title: Optional[str]
+    video_id: Optional[str]
+    published_date: str
+
+
+class YoutubeReturn(BaseModel, **main_config):
+    channel: Optional[str]
+    title: Optional[str]
+    video_id: Optional[str]
+    published_date: str
 
 
 class MessageReturn(BaseModel, **main_config):
