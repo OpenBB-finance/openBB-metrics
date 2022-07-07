@@ -22,14 +22,11 @@ async def on_ready():
     print('We have logged in as {0.user}'.format(client))
     server_id = 831165782750789672
     guild = client.get_guild(server_id)
-    memberList = guild.members
-    botsInServer = list(filter(filterOnlyBots, memberList))
-    for bot in botsInServer:
-        print(bot)
-    botsInServerCount = len(botsInServer)
-    # (Total Member count - bot count) = Total user count
-    usersInServerCount = guild.member_count - botsInServerCount
-    print(botsInServerCount, usersInServerCount)
+    member_list = guild.members
+    bots = list(filter(filterOnlyBots, member_list))
+    bots_count = len(bots)
+    member_count = guild.member_count - bots_count
+    print(bots_count, member_count)
     loop = asyncio.get_running_loop()
     loop.stop()
 
