@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     REDDIT_USER_AGENT:  str
     NEWSAPI_TOKEN: str
     YOUTUBE_TOKEN: str
+    DISCORD_TOKEN: str
 
 
 file = ".env"
