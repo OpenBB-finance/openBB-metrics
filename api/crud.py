@@ -52,8 +52,11 @@ def create_reddit(db: Session, reddit: schemas.RedditCreate):
     return db_reddit
 
 
-def get_linkedin(db: Session):
-    return db.query(models.Linkedin).all()
+def get_linkedin(db: Session, updated_date: Union[str, None] = None):
+    if updated_date:
+        return db.query(models.Linkedin).filter(models.Linkedin.updated_date == updated_date).first()
+    else:
+        return db.query(models.Linkedin).all()
 
 
 def create_linkedin(db: Session, linkedin: schemas.LinkedinCreate):
@@ -65,11 +68,14 @@ def create_linkedin(db: Session, linkedin: schemas.LinkedinCreate):
     return db_linkedin
 
 
-def get_discord(db: Session):
-    return db.query(models.Discord).all()
+def get_discord(db: Session, updated_date: Union[str, None] = None):
+    if updated_date:
+        return db.query(models.Discord).filter(models.Discord.updated_date == updated_date).first()
+    else:
+        return db.query(models.Discord).all()
 
 
-def create_discord(db: Session, discord: schemas.LinkedinCreate):
+def create_discord(db: Session, discord: schemas.DiscordCreate):
     db_discord = models.Discord(total_followers=discord.total_followers, new_followers=discord.new_followers,
                                 active_followers=discord.active_followers, updated_date=discord.updated_date)
     db.add(db_discord)

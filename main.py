@@ -81,9 +81,27 @@ def get_linkedin(db: Session = Depends(get_db)):
     return crud.get_linkedin(db)
 
 
+@app.post("/linkedin", response_model=schemas.MessageReturn)
+def create_linkedin(linkedin: schemas.LinkedinCreate, db: Session = Depends(get_db)):
+    db_linkedin = crud.get_linkedin(db, linkedin.updated_date)
+    if db_linkedin:
+        return DUPLICATE
+    crud.create_linkedin(db=db, linkedin=linkedin)
+    return SUCCESS
+
+
 @app.get("/discord")
 def get_discord(db: Session = Depends(get_db)):
     return crud.get_discord(db)
+
+
+@app.post("/discord", response_model=schemas.MessageReturn)
+def create_discord(discord: schemas.DiscordCreate, db: Session = Depends(get_db)):
+    db_discord = crud.get_discord(db, discord.updated_date)
+    if db_discord:
+        return DUPLICATE
+    crud.create_discord(db=db, discord=discord)
+    return SUCCESS
 
 
 @app.get("/headlines")

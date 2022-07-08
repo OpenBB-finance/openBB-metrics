@@ -1,6 +1,7 @@
 import json
 import praw
 import requests
+from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 from utilities.config import settings
 
@@ -137,6 +138,25 @@ def get_youtube_stats():
         print(response)
 
 
+def get_linkedin_stats():
+    x = requests.get("http://localhost:8000/linkedin").json()
+
+    url = "https://www.linkedin.com/pages-extensions/FollowCompany?id=76491268&counter=bottom"
+    data = requests.get(url)
+    soup = BeautifulSoup(data.content, 'html.parser')
+    followers = int(soup.select_one('.follower-count').text)
+
+    data = send_request("linkedin", type_req="GET")
+    prev_followers = 0
+    if data:
+        if data[-1]["total_followers"] is not None:
+            prev_followers = data[-1]["total_followers"] 
+
+    new_followers = followers - prev_followers
+    response = send_request("linkedin", {"new_followers": new_followers, "total_followers": followers, "updated_date": current_date})
+    return response
+
+
 if __name__ == '__main__':
     get_terminal_downloads()
     get_twitter_stats()
@@ -144,3 +164,4 @@ if __name__ == '__main__':
     get_discord_stats()
     get_headlines_stats()
     get_youtube_stats()
+    get_linkedin_stats()

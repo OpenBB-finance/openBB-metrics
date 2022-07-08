@@ -11,9 +11,6 @@ def create_path(*path: str) -> str:
 
 
 class Settings(BaseSettings):
-    MONTHLY_FREE_COMMAND: int = 10
-    DAILY_FREE_COMMAND: int = 2
-
     # Loaded from env
     POSTGRES_USERNAME: str
     POSTGRES_PASSWORD: str
