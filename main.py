@@ -31,7 +31,9 @@ def home():
             "/twitter": "Twitter Statistics",
             "/reddit": "Reddit Statistics",
             "/headlines": "News Headlines Statistics",
-            "/youtube": "Youtube Statistics"}
+            "/youtube": "Youtube Statistics",
+            "/discord": "Discord Statistics",
+            "/linkedin": "Linkedin Statistics"}
 
 
 @app.get("/terminal_downloads")

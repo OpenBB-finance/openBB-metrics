@@ -1,12 +1,6 @@
-To run without Docker: 
+# OpenBB Open Source Metrics
 
-`pip install poetry`
-
-`poetry install`
-
-`uvicorn main:app --reload`
-
-To run using Docker: 
+To run using Docker (recommended): 
 
 `docker-compose build`
 
@@ -16,11 +10,13 @@ To run using Docker:
 
 `docker-compose up`
 
+To run without Docker: 
 
-To do:
+`pip install poetry`
 
-- Discord
-- Linkedin
+`poetry install`
+
+`uvicorn main:app --reload`
 
 For reference:
 

@@ -107,10 +107,6 @@ def get_reddit_stats():
     return response
 
 
-def get_discord_stats():
-    return
-
-
 def get_headlines_stats():
     """
     Get news headlines statistics
@@ -139,8 +135,9 @@ def get_youtube_stats():
 
 
 def get_linkedin_stats():
-    x = requests.get("http://localhost:8000/linkedin").json()
-
+    """
+    Get Linkedin statistics
+    """
     url = "https://www.linkedin.com/pages-extensions/FollowCompany?id=76491268&counter=bottom"
     data = requests.get(url)
     soup = BeautifulSoup(data.content, 'html.parser')
@@ -153,7 +150,34 @@ def get_linkedin_stats():
             prev_followers = data[-1]["total_followers"] 
 
     new_followers = followers - prev_followers
-    response = send_request("linkedin", {"new_followers": new_followers, "total_followers": followers, "updated_date": current_date})
+    response = send_request("linkedin", {"new_followers": new_followers, "total_followers": followers,
+                                         "updated_date": current_date})
+    return response
+
+
+def get_discord_stats():
+    """
+    Get Discord statistics
+    """
+    header = {
+        "authorization": f"{settings.DISCORD_TOKEN}",
+        "Content-Type": "application/json"
+    }
+    url = "https://discord.com/api/v7/guilds/831165782750789672?with_counts=true"
+    data = requests.get(url, headers=header).json()
+    total_followers = data["approximate_member_count"]
+    active_followers = data["approximate_presence_count"]
+
+    data = send_request("discord", type_req="GET")
+    prev_followers = 0
+    if data:
+        if data[-1]["total_followers"] is not None:
+            prev_followers = data[-1]["total_followers"]
+
+    new_followers = total_followers - prev_followers
+
+    response = send_request("discord", {"new_followers": new_followers, "total_followers": total_followers,
+                                        "active_followers": active_followers, "updated_date": current_date})
     return response
 
 
