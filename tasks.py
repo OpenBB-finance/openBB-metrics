@@ -160,7 +160,7 @@ def get_discord_stats():
     Get Discord statistics
     """
     header = {
-        "authorization": f"{settings.DISCORD_TOKEN}",
+        "authorization": f"Bot {settings.DISCORD_TOKEN}",
         "Content-Type": "application/json"
     }
     url = "https://discord.com/api/v7/guilds/831165782750789672?with_counts=true"
