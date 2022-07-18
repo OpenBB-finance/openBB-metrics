@@ -1,6 +1,14 @@
 # OpenBB Open Source Metrics
 
-To run using Docker (recommended): 
+To run using Docker (recommended):
+
+`docker build .`
+
+`docker image ls`
+
+`docker run -p 8000:8000 {IMAGE ID}`
+
+To run using Docker-compose: 
 
 `docker-compose build`
 
