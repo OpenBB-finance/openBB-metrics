@@ -5,7 +5,8 @@ from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 from utilities.config import settings
 
-current_date = str(datetime.utcnow().date())
+# current_date = str(datetime.utcnow().date())
+current_date = int(datetime.timestamp(datetime.now()))
 
 
 def send_request(url, data=None, type_req="POST"):
@@ -14,6 +15,10 @@ def send_request(url, data=None, type_req="POST"):
     return requests.request(type_req, f"http://127.0.0.1:8000/{url}",
                             data=json.dumps(data),
                             headers={'Content-Type': 'application/json'}).json()
+
+
+def convert_to_timestamp(date_str):
+    return int(datetime.timestamp(datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%SZ')))
 
 
 def get_terminal_downloads():
@@ -114,8 +119,9 @@ def get_headlines_stats():
     url = f"https://newsapi.org/v2/everything?q=openbb&apiKey={settings.NEWSAPI_TOKEN}"
     data = requests.get(url)
     for i in data.json()["articles"]:
+        published_date = convert_to_timestamp(i["publishedAt"])
         response = send_request("headlines", {"source": i["source"]["name"], "title": i["title"], "url": i["url"],
-                                              "published_date": i["publishedAt"]})
+                                              "published_date": published_date})
         print(response)
 
 
@@ -127,10 +133,11 @@ def get_youtube_stats():
           f"%3A00Z&order=date&key={settings.YOUTUBE_TOKEN}"
     data = requests.get(url)
     for i in data.json()["items"]:
+        published_date = convert_to_timestamp(i["snippet"]["publishTime"])
         response = send_request("youtube", {"channel": i["snippet"]["channelTitle"],
                                             "title": i["snippet"]["title"],
                                             "video_id": i["id"]["videoId"],
-                                            "published_date": i["snippet"]["publishTime"]})
+                                            "published_date": published_date})
         print(response)
 
 
@@ -181,11 +188,53 @@ def get_discord_stats():
     return response
 
 
+def add_page_number(current_url):
+    current_url, current_page_num = current_url.rsplit("=", 1)
+    new_url = current_url + str(int(current_page_num) + 1)
+    return new_url
+
+
+def get_github_stats():
+    """
+    Get Github statistics
+    """
+    url = "https://api.github.com/repos/OpenBB-finance/OpenBBTerminal/contributors?per_page=100&anon=false&page=1"
+    contributors = 0
+    data = requests.get(url).json()
+    contributors += len(data)
+    while len(data) == 100:
+        url = add_page_number(url)
+        data = requests.get(url).json()
+        contributors += len(data)
+
+    url = "https://api.github.com/repos/OpenBB-finance/OpenBBTerminal"
+    data = requests.get(url).json()
+    stars = data["stargazers_count"]
+    forks = data["forks_count"]
+    total_issues_count = data["open_issues_count"]
+
+    url = "https://api.github.com/search/issues?q=repo:OpenBB-finance/OpenBBTerminal%20is:pr%20is:open"
+    data = requests.get(url).json()
+    open_pr = data["total_count"]
+
+    url = "https://api.github.com/search/issues?q=repo:OpenBB-finance/OpenBBTerminal%20is:pr%20is:closed"
+    data = requests.get(url).json()
+    closed_pr = data["total_count"]
+
+    issues = total_issues_count - open_pr
+
+    response = send_request("github", {"contributors": contributors, "stars": stars, "forks": forks,
+                                       "open_pr": open_pr, "closed_pr": closed_pr, "issues": issues,
+                                       "updated_date": current_date})
+    return response
+
+
 if __name__ == '__main__':
     get_terminal_downloads()
     get_twitter_stats()
     get_reddit_stats()
     get_discord_stats()
+    get_linkedin_stats()
     get_headlines_stats()
     get_youtube_stats()
-    get_linkedin_stats()
+    get_github_stats()

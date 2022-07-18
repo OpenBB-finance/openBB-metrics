@@ -132,3 +132,17 @@ def create_youtube(youtube: schemas.YoutubeCreate, db: Session = Depends(get_db)
         return DUPLICATE
     crud.create_youtube(db=db, youtube=youtube)
     return SUCCESS
+
+
+@app.get("/github")
+def get_github(db: Session = Depends(get_db)):
+    return crud.get_github(db)
+
+
+@app.post("/github", response_model=schemas.MessageReturn)
+def create_github(github: schemas.GithubCreate, db: Session = Depends(get_db)):
+    db_github = crud.get_github(db, github.updated_date)
+    if db_github:
+        return DUPLICATE
+    crud.create_github(db=db, github=github)
+    return SUCCESS

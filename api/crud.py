@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from . import models, schemas
 
 
-def get_terminal_downloads(db: Session, updated_date: Union[str, None] = None):
+def get_terminal_downloads(db: Session, updated_date: Union[int, None] = None):
     if updated_date:
         return db.query(models.TerminalDownloads).filter(models.TerminalDownloads.updated_date == updated_date).first()
     else:
@@ -19,7 +19,7 @@ def create_terminal_download(db: Session, terminal: schemas.TerminalCreate):
     return db_download
 
 
-def get_twitter(db: Session, updated_date: Union[str, None] = None):
+def get_twitter(db: Session, updated_date: Union[int, None] = None):
     if updated_date:
         return db.query(models.Twitter).filter(models.Twitter.updated_date == updated_date).first()
     else:
@@ -36,7 +36,7 @@ def create_twitter(db: Session, twitter: schemas.TwitterCreate):
     return db_twitter
 
 
-def get_reddit(db: Session, updated_date: Union[str, None] = None):
+def get_reddit(db: Session, updated_date: Union[int, None] = None):
     if updated_date:
         return db.query(models.Reddit).filter(models.Reddit.updated_date == updated_date).first()
     else:
@@ -52,7 +52,7 @@ def create_reddit(db: Session, reddit: schemas.RedditCreate):
     return db_reddit
 
 
-def get_linkedin(db: Session, updated_date: Union[str, None] = None):
+def get_linkedin(db: Session, updated_date: Union[int, None] = None):
     if updated_date:
         return db.query(models.Linkedin).filter(models.Linkedin.updated_date == updated_date).first()
     else:
@@ -68,7 +68,7 @@ def create_linkedin(db: Session, linkedin: schemas.LinkedinCreate):
     return db_linkedin
 
 
-def get_discord(db: Session, updated_date: Union[str, None] = None):
+def get_discord(db: Session, updated_date: Union[int, None] = None):
     if updated_date:
         return db.query(models.Discord).filter(models.Discord.updated_date == updated_date).first()
     else:
@@ -84,7 +84,7 @@ def create_discord(db: Session, discord: schemas.DiscordCreate):
     return db_discord
 
 
-def get_headlines(db: Session, url: Union[str, None] = None):
+def get_headlines(db: Session, url: Union[int, None] = None):
     if url:
         return db.query(models.Headlines).filter(models.Headlines.url == url).first()
     else:
@@ -100,7 +100,7 @@ def create_headlines(db: Session, headlines: schemas.HeadlinesCreate):
     return db_headlines
 
 
-def get_youtube(db: Session, video_id: Union[str, None] = None):
+def get_youtube(db: Session, video_id: Union[int, None] = None):
     if video_id:
         return db.query(models.Youtube).filter(models.Youtube.video_id == video_id).first()
     else:
@@ -114,3 +114,20 @@ def create_youtube(db: Session, youtube: schemas.YoutubeCreate):
     db.commit()
     db.refresh(db_youtube)
     return db_youtube
+
+
+def get_github(db: Session, updated_date: Union[int, None] = None):
+    if updated_date:
+        return db.query(models.Github).filter(models.Github.updated_date == updated_date).first()
+    else:
+        return db.query(models.Github).all()
+
+
+def create_github(db: Session, github: schemas.GithubCreate):
+    db_github = models.Github(contributors=github.contributors, stars=github.stars, forks=github.forks,
+                              open_pr=github.open_pr, closed_pr=github.closed_pr, issues=github.issues,
+                              updated_date=github.updated_date)
+    db.add(db_github)
+    db.commit()
+    db.refresh(db_github)
+    return db_github

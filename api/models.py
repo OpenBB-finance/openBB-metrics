@@ -13,7 +13,7 @@ class TerminalDownloads(Base):
     tag_name = Column(String, nullable=True)
     macos = Column(Integer, nullable=True)
     windows = Column(Integer, nullable=True)
-    updated_date = Column(String, nullable=False)
+    updated_date = Column(Integer, nullable=False)
 
 
 class Twitter(Base):
@@ -26,7 +26,7 @@ class Twitter(Base):
     likes = Column(Integer, nullable=True)
     retweets = Column(Integer, nullable=True)
     mentions = Column(Integer, nullable=True)
-    updated_date = Column(String, nullable=False)
+    updated_date = Column(Integer, nullable=False)
 
 
 class Reddit(Base):
@@ -37,7 +37,7 @@ class Reddit(Base):
     total_followers = Column(Integer, nullable=True)
     new_followers = Column(Integer, nullable=True)
     upvotes = Column(Integer, nullable=True)
-    updated_date = Column(String, nullable=False)
+    updated_date = Column(Integer, nullable=False)
 
 
 class Linkedin(Base):
@@ -46,7 +46,7 @@ class Linkedin(Base):
     id = Column(Integer, primary_key=True, index=True)
     total_followers = Column(Integer, nullable=True)
     new_followers = Column(Integer, nullable=True)
-    updated_date = Column(String, nullable=False)
+    updated_date = Column(Integer, nullable=False)
 
 
 class Discord(Base):
@@ -56,7 +56,7 @@ class Discord(Base):
     total_followers = Column(Integer, nullable=True)
     new_followers = Column(Integer, nullable=True)
     active_followers = Column(Integer, nullable=True)
-    updated_date = Column(String, nullable=False)
+    updated_date = Column(Integer, nullable=False)
 
 
 class Headlines(Base):
@@ -67,7 +67,7 @@ class Headlines(Base):
     source = Column(String)
     title = Column(String)
     url = Column(String)
-    published_date = Column(String)
+    published_date = Column(Integer)
 
 
 class Youtube(Base):
@@ -78,4 +78,17 @@ class Youtube(Base):
     channel = Column(String)
     title = Column(String)
     video_id = Column(String, unique=True)
-    published_date = Column(String)
+    published_date = Column(Integer)
+
+
+class Github(Base):
+    __tablename__ = "github"
+
+    id = Column(Integer, primary_key=True, index=True)
+    contributors = Column(Integer)
+    stars = Column(Integer)
+    forks = Column(Integer)
+    open_pr = Column(Integer)
+    closed_pr = Column(Integer)
+    issues = Column(Integer)
+    updated_date = Column(Integer)
