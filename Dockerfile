@@ -18,4 +18,6 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
 COPY ./ /code/
 
-EXPOSE 8000
+COPY ./api_entrypoint.sh ./api_entrypoint.sh
+
+CMD ["/bin/bash", "./api_entrypoint.sh"]

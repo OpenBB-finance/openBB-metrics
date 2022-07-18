@@ -33,7 +33,8 @@ def home():
             "/headlines": "News Headlines Statistics",
             "/youtube": "Youtube Statistics",
             "/discord": "Discord Statistics",
-            "/linkedin": "Linkedin Statistics"}
+            "/linkedin": "Linkedin Statistics",
+            "/github": "Github Statistics"}
 
 
 @app.get("/terminal_downloads")
